@@ -10,8 +10,6 @@ public class AlunosController : Controller
     private readonly AppDbContext _db;
     public AlunosController(AppDbContext db) => _db = db;
     
-    IActionResult Index() => View();
-    
     //===============================================
     //REGIÃO: Listagem de Alunos
     //===============================================
@@ -19,6 +17,7 @@ public class AlunosController : Controller
     public async Task<IActionResult> ListarAlunosAsync()
     {
         var alunos = await _db.Alunos.AsNoTracking().ToListAsync();
+        
         return View(alunos);
     }
     
@@ -26,6 +25,12 @@ public class AlunosController : Controller
     //REGIÃO: Cadastro de Alunos
     //===============================================
 
+    [HttpGet]
+    public IActionResult CadastrarAluno()
+    {
+        return  View();
+    }
+    
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddAlunoAsync(AlunoModel alunoModel)
@@ -36,14 +41,14 @@ public class AlunosController : Controller
             {
                 _db.Alunos.Add(alunoModel);
                 await _db.SaveChangesAsync();
-                return RedirectToAction(nameof(ListarAlunosAsync));
+                return View("ListarAlunos");
             }
             catch(DbUpdateException)
             {
                 ModelState.AddModelError("", "Não foi possível salvar as alterações. Tente novamente.");
             }
         }
-        return View("ViewCadastroAluno", alunoModel);
+        return View("CadastrarAluno", alunoModel);
     }
     
     //===============================================

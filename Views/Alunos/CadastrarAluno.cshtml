@@ -1,0 +1,20 @@
+﻿@model AlunoModel
+@{
+    ViewData["Title"] = "Cadastrar aluno";
+}
+
+<div class="container d-flex flex-column justify-content-center align-items-center ">
+    <h1 class="display-4 text-center">Cadastrar Alunos</h1>
+    
+    <form method="post" asp-controller="Alunos" asp-action="AddAluno">
+        <div class="mb-3">
+            <label class="form-label">Nome</label>
+            <input type="text" class="form-control" asp-for="Nome">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Data de Nascimento</label>
+            <input type="date" class="form-control" asp-for="DataNascimento">
+        </div>
+        <button type="submit" class="btn btn-primary">Enviar</button>
+    </form>
+</div>
