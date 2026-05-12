@@ -42,14 +42,13 @@ public class AlunosController : Controller
             {
                 _db.Alunos.Add(alunoModel);
                 await _db.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
             }
             catch(DbUpdateException)
             {
                 ModelState.AddModelError("", "Não foi possível salvar as alterações. Tente novamente.");
             }
         }
-        return View("CadastrarAluno", alunoModel);
+        return RedirectToAction(nameof(Index));
     }
     
     //===============================================

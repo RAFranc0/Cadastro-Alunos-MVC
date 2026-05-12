@@ -21,18 +21,16 @@
                 <tr>
                     <td>@aluno.Nome</td>
                     <td>@aluno.DataNascimento.ToString("dd/MM/yyyy")</td>
-                    <td>
+                    <td class="d-flex justify-content-evenly">
                         <!-- ####################### -->
                         <!-- # Exclusão de usuário # -->
                         <!-- ####################### -->
 
-                        <!-- Button trigger modal -->
                         <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
                                 data-bs-target="#modalExcluir-@aluno.Id">
                             <i class="bi bi-person-fill-x"></i>
                         </button>
 
-                        <!-- Modal -->
                         <div class="modal fade" id="modalExcluir-@aluno.Id" tabindex="-1"
                              aria-labelledby="modalExcluirLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
@@ -79,6 +77,65 @@
                         <!-- ####################### -->
                         <!-- # Edição de usuário # -->
                         <!-- ####################### -->
+                        
+                        <button type="button" class="btn btn-outline-warning" data-bs-toggle="modal"
+                                data-bs-target="#modalEditar-@aluno.Id">
+                            <i class="bi bi-person-fill-gear"></i>
+                        </button>
+
+                        <div class="modal fade" id="modalEditar-@aluno.Id" tabindex="-1"
+                             aria-labelledby="modalEditarLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="modalEditarLabel">Atualizar dados de @aluno.Nome</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+
+                                    <form method="post" asp-controller="Alunos" asp-action="Edit"
+                                          asp-route-id="@aluno.Id">
+                                        <div
+                                            class="modal-body d-flex flex-column justify-content-center align-items-center">
+                                            <p class="fs-5">Insira os novos dados nos respectivos campos:</p>
+
+                                            <div class="mb-3 w-75 ">
+                                                <label class="form-label">Nome:</label>
+                                                <input type="text" class="form-control text-center"
+                                                       aria-describedby="nomeAtual" name="Nome" value="@aluno.Nome"/>
+                                                <div id="nomeAtual" class="form-text fs-5">
+                                                    Atual: @aluno.Nome
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-3 w-75 ">
+                                                <label class="form-label">Data:</label>
+                                                <input type="date" class="form-control text-center"
+                                                       name="DataNascimento"
+                                                       value="@aluno.DataNascimento"
+                                                       min="1900-01-01" 
+                                                       max="2099-12-31"
+                                                       oninput="if(this.value.length > 10) this.value = this.value.slice(0, 10)"
+                                                       aria-describedby="dataNascimentoAtual"/>
+                                                <div id="dataNascimentoAtual" class="form-text fs-5">
+                                                    Atual: @aluno.DataNascimento.ToString("dd/MM/yyyy")
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                Voltar
+                                            </button>
+
+                                            <input type="hidden" name="id" value="@aluno.Id"/>
+
+                                            <button type="submit" class="btn btn-outline-warning">Confirmar edição
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     </td>
                 </tr>
             }
