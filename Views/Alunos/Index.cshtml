@@ -1,0 +1,88 @@
+﻿@model List<AlunoModel>
+@{
+    ViewData["Title"] = "Lista de alunos";
+}
+
+<div class="container d-flex flex-column justify-content-center align-items-center ">
+    <h1 class="display-4 text-center">Lista de Alunos</h1>
+
+    <div class="w-75 text-center">
+        <table class="table table-striped-columns table-dark">
+            <thead>
+            <tr>
+                <th scope="col" class="w-50">Nome</th>
+                <th scope="col" class="w-25">Data de Nascimento</th>
+                <th scope="col" class="w-25">Ações</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var aluno in Model)
+            {
+                <tr>
+                    <td>@aluno.Nome</td>
+                    <td>@aluno.DataNascimento.ToString("dd/MM/yyyy")</td>
+                    <td>
+                        <!-- ####################### -->
+                        <!-- # Exclusão de usuário # -->
+                        <!-- ####################### -->
+
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                                data-bs-target="#modalExcluir-@aluno.Id">
+                            <i class="bi bi-person-fill-x"></i>
+                        </button>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="modalExcluir-@aluno.Id" tabindex="-1"
+                             aria-labelledby="modalExcluirLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="modalExcluirLabel">Confirmação de Exclusão</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+
+                                    <form method="post" asp-controller="Alunos" asp-action="Delete"
+                                          asp-route-id="@aluno.Id">
+                                        <div
+                                            class="modal-body d-flex flex-column justify-content-center align-items-center">
+                                            <p class="fs-5">Você confirma a exclusão do registro abaixo?:</p>
+
+                                            <div class="mb-3 w-75 ">
+                                                <label class="form-label">Nome:</label>
+                                                <input type="text" class="form-control text-center" value="@aluno.Nome"
+                                                       disabled/>
+                                            </div>
+
+                                            <div class="mb-3 w-75 ">
+                                                <label class="form-label">Data:</label>
+                                                <input type="text" class="form-control text-center"
+                                                       value="@aluno.DataNascimento.ToString("dd/MM/yyyy")" disabled/>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                Voltar
+                                            </button>
+
+                                            <input type="hidden" name="id" value="@aluno.Id"/>
+
+                                            <button type="submit" class="btn btn-outline-danger">Confirmar exclusão
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ####################### -->
+                        <!-- # Edição de usuário # -->
+                        <!-- ####################### -->
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

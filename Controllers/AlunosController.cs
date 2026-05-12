@@ -14,7 +14,8 @@ public class AlunosController : Controller
     //REGIÃO: Listagem de Alunos
     //===============================================
 
-    public async Task<IActionResult> ListarAlunosAsync()
+    [HttpGet]
+    public async Task<IActionResult> Index()
     {
         var alunos = await _db.Alunos.AsNoTracking().ToListAsync();
         
@@ -26,14 +27,14 @@ public class AlunosController : Controller
     //===============================================
 
     [HttpGet]
-    public IActionResult CadastrarAluno()
+    public IActionResult Create()
     {
-        return  View();
+        return View("CadastrarAluno");
     }
     
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> AddAlunoAsync(AlunoModel alunoModel)
+    public async Task<IActionResult> Create(AlunoModel alunoModel)
     {
         if (ModelState.IsValid)
         {
@@ -41,7 +42,7 @@ public class AlunosController : Controller
             {
                 _db.Alunos.Add(alunoModel);
                 await _db.SaveChangesAsync();
-                return View("ListarAlunos");
+                return RedirectToAction(nameof(Index));
             }
             catch(DbUpdateException)
             {
@@ -57,7 +58,7 @@ public class AlunosController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> EditAlunoAsync(AlunoModel alunoModel)
+    public async Task<IActionResult> Edit(AlunoModel alunoModel)
     {
         if (!ModelState.IsValid) return View("ViewEditarAluno", alunoModel);
 
@@ -70,14 +71,14 @@ public class AlunosController : Controller
             alunoExistente.DataNascimento = alunoModel.DataNascimento;
 
             await _db.SaveChangesAsync();
-            return RedirectToAction(nameof(ListarAlunosAsync));
+            return RedirectToAction(nameof(Index));
         }
         catch (DbUpdateException)
         {
             ModelState.AddModelError("", "Erro ao atualizar banco de dados.");
         }
         
-        return View("ViewEditarAluno", alunoModel);
+        return View("Index", alunoModel);
     }
     
     //===============================================
@@ -85,7 +86,7 @@ public class AlunosController : Controller
     //===============================================
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeletarAlunoAsync(int id)
+    public async Task<IActionResult> Delete(Guid id)
     {
         var aluno = await _db.Alunos.FindAsync(id);
         if (aluno == null) return NotFound();
@@ -94,7 +95,7 @@ public class AlunosController : Controller
         {
             _db.Alunos.Remove(aluno);
             await _db.SaveChangesAsync();
-            return RedirectToAction(nameof(ListarAlunosAsync));
+            return RedirectToAction(nameof(Index));
         }
         catch (DbUpdateException)
         {
