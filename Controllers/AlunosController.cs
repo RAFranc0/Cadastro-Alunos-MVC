@@ -1,5 +1,6 @@
 ﻿using CadastroAlunosMVC.Data;
 using CadastroAlunosMVC.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +16,7 @@ public class AlunosController : Controller
     //===============================================
 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> Index()
     {
         var alunos = await _db.Alunos.AsNoTracking().ToListAsync();
@@ -27,12 +29,14 @@ public class AlunosController : Controller
     //===============================================
 
     [HttpGet]
+    [Authorize]
     public IActionResult Create()
     {
         return View("CadastrarAluno");
     }
     
     [HttpPost]
+    [Authorize]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(AlunoModel alunoModel)
     {
@@ -56,6 +60,7 @@ public class AlunosController : Controller
     //===============================================
 
     [HttpPost]
+    [Authorize]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(AlunoModel alunoModel)
     {
@@ -84,6 +89,7 @@ public class AlunosController : Controller
     //REGIÃO: Exclusão de Alunos
     //===============================================
     [HttpPost]
+    [Authorize]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(Guid id)
     {

@@ -1,0 +1,45 @@
+﻿@model CadastroAlunosMVC.Models.LoginViewModel
+
+@{
+    ViewData["Title"] = "Login";
+    Layout = "_Layout"; // Mantém o menu superior, se desejar
+}
+
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card shadow-lg p-4" style="width: 100%; max-width: 400px; border-radius: 15px;">
+        <div class="text-center mb-4">
+            <i class="bi bi-shield-lock-fill text-primary" style="font-size: 3rem;"></i>
+            <h2 class="fw-bold">Acesso ao Sistema</h2>
+            <p class="text-muted">Entre com suas credenciais</p>
+        </div>
+
+        <form asp-action="Login" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+            <div class="mb-3">
+                <label asp-for="Usuario" class="form-label">Usuário</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                    <input asp-for="Usuario" class="form-control" placeholder="Ex: admin" required />
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Senha" class="form-label">Senha</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-key"></i></span>
+                    <input asp-for="Senha" type="password" class="form-control" placeholder="••••••" required />
+                </div>
+            </div>
+
+            <div class="mb-3 form-check">
+                <input asp-for="LembrarMe" class="form-check-input" />
+                <label asp-for="LembrarMe" class="form-check-label">Lembrar de mim</label>
+            </div>
+
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary btn-lg">Entrar</button>
+            </div>
+        </form>
+    </div>
+</div>
