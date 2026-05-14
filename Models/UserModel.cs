@@ -1,10 +1,8 @@
 ﻿namespace CadastroAlunosMVC.Models;
 
-public class LoginViewModel
+public class UserModel
 {
+    public Guid Id { get; set; }
     public string Usuario { get; set; } = string.Empty;
     public string Senha { get; set; } = string.Empty;
-    public bool LembrarMe { get; set; }
-    
-    public UserModel User { get; set; } = new UserModel();
 }

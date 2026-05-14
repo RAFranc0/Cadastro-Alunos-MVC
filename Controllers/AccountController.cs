@@ -2,12 +2,17 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using CadastroAlunosMVC.Data;
 using CadastroAlunosMVC.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace CadastroAlunosMVC.Controllers;
 
 public class AccountController : Controller
 {
+    private readonly AppDbContext _db;
+    public AccountController(AppDbContext db) => _db = db;
+    
     [HttpGet]
     public IActionResult Login() => View();
 
@@ -39,6 +44,25 @@ public class AccountController : Controller
 
         ModelState.AddModelError("", "Usuário ou senha inválidos.");
         return View(model);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Create(LoginViewModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            try
+            {
+                model.User.Id  = Guid.NewGuid();
+                _db.Users.Add(model.User);
+                await _db.SaveChangesAsync();
+            }
+            catch(DbUpdateException)
+            {
+                ModelState.AddModelError("", "Não foi possível realizar o cadastro. Tente novamente.");
+            }
+        }
+        return RedirectToAction(nameof(Index), "Home");
     }
 
     public async Task<IActionResult> Logout()
