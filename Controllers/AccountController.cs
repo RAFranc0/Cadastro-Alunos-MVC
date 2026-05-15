@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using CadastroAlunosMVC.Data;
 using CadastroAlunosMVC.Models;
+using CadastroAlunosMVC.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace CadastroAlunosMVC.Controllers;
@@ -28,7 +29,7 @@ public class AccountController : Controller
             return View(model);
         }
         
-        bool senhaCorreta = usuarioNoBanco.Senha == model.Senha;
+        bool senhaCorreta = usuarioNoBanco.Senha == model.Senha.GerarHash();
 
         if (senhaCorreta)
         {
@@ -68,6 +69,7 @@ public class AccountController : Controller
                 }
                 
                 model.User.Id  = Guid.NewGuid();
+                model.User.Senha = model.User.Senha.GerarHash();
                 _db.Users.Add(model.User);
                 await _db.SaveChangesAsync();
                 
