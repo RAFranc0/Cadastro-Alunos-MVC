@@ -28,10 +28,8 @@ public class AccountController : Controller
             ModelState.AddModelError("LoginErro", "Usuário não encontrado.");
             return View(model);
         }
-        
-        bool senhaCorreta = usuarioNoBanco.Senha == model.Senha.GerarHash();
 
-        if (senhaCorreta)
+        if (model.Senha.VerificarSenha(usuarioNoBanco.Senha))
         {
             var claims = new List<Claim>
             {
