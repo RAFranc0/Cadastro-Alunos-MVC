@@ -24,7 +24,7 @@ public class AccountController : Controller
         
         if (usuarioNoBanco == null)
         {
-            ModelState.AddModelError("", "Usuário não encontrado.");
+            ModelState.AddModelError("LoginErro", "Usuário não encontrado.");
             return View(model);
         }
         
@@ -49,7 +49,7 @@ public class AccountController : Controller
             return RedirectToAction("Index", "Alunos");
         }
         
-        ModelState.AddModelError("", "Senha inválida.");
+        ModelState.AddModelError("LoginErro", "Senha inválida.");
         return View(model);
     }
 
@@ -60,16 +60,26 @@ public class AccountController : Controller
         {
             try
             {
+                var jaExiste = await _db.Users.AnyAsync(u => u.Usuario.ToUpper() == model.User.Usuario.ToUpper());
+                if (jaExiste) 
+                {
+                    ModelState.AddModelError("CadastroErro", "Este usuário já existe.");
+                    return View("Login", model);
+                }
+                
                 model.User.Id  = Guid.NewGuid();
                 _db.Users.Add(model.User);
                 await _db.SaveChangesAsync();
+                
+                return RedirectToAction(nameof(Login));
             }
             catch(DbUpdateException)
             {
-                ModelState.AddModelError("", "Não foi possível realizar o cadastro. Tente novamente.");
+                ModelState.AddModelError("CadastroErro", "Não foi possível realizar o cadastro. Tente novamente.");
             }
         }
-        return RedirectToAction(nameof(Index), "Home");
+
+        return View("Login", model);
     }
 
     public async Task<IActionResult> Logout()
