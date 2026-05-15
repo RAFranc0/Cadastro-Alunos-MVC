@@ -19,21 +19,28 @@ public class AccountController : Controller
     [HttpPost]
     public async Task<IActionResult> Login(LoginViewModel model)
     {
-        // PARA TESTE: Usuário "admin" e senha "123"
-        if (model.Usuario == "admin" && model.Senha == "123")
+        var usuarioNoBanco = await _db.Users
+            .FirstOrDefaultAsync(u => u.Usuario == model.Usuario);
+        
+        if (usuarioNoBanco == null)
         {
-            // Claims são "afirmações" sobre o usuário
+            ModelState.AddModelError("", "Usuário não encontrado.");
+            return View(model);
+        }
+        
+        bool senhaCorreta = usuarioNoBanco.Senha == model.Senha;
+
+        if (senhaCorreta)
+        {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, model.Usuario),
+                new Claim(ClaimTypes.Name, usuarioNoBanco.Usuario),
                 new Claim(ClaimTypes.Role, "Administrador"),
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
             var authProperties = new AuthenticationProperties { IsPersistent = model.LembrarMe };
 
-            // O comando que cria o Cookie criptografado no navegador
             await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme, 
                 new ClaimsPrincipal(claimsIdentity), 
@@ -41,8 +48,8 @@ public class AccountController : Controller
 
             return RedirectToAction("Index", "Alunos");
         }
-
-        ModelState.AddModelError("", "Usuário ou senha inválidos.");
+        
+        ModelState.AddModelError("", "Senha inválida.");
         return View(model);
     }
 
